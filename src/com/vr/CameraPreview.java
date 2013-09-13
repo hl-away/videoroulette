@@ -2,8 +2,10 @@ package com.vr;
 
 import android.content.Context;
 import android.hardware.Camera;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
 import java.io.IOException;
 
@@ -16,15 +18,15 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
     private SurfaceHolder mSurfaceHolder;
     private Camera mCamera;
+    private boolean needChangeCamera = false;
 
-    //Constructor that obtains context and camera
     public CameraPreview(Context context, Camera camera) {
         super(context);
         this.mCamera = camera;
 
         this.mSurfaceHolder = this.getHolder();
-        this.mSurfaceHolder.addCallback(this); // we get notified when underlying surface is created and destroyed
-        this.mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS); //this is a deprecated method, is not requierd after 3.0
+        this.mSurfaceHolder.addCallback(this);
+        this.mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
     }
 
     @Override
@@ -35,7 +37,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         } catch (IOException e) {
             // left blank for now
         }
-
     }
 
     @Override
@@ -47,7 +48,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     @Override
     public void surfaceChanged(SurfaceHolder surfaceHolder, int format,
                                int width, int height) {
-        // start preview with new settings
         try {
             mCamera.setPreviewDisplay(surfaceHolder);
             mCamera.startPreview();
@@ -55,5 +55,4 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             // intentionally left blank for a test
         }
     }
-
 }
