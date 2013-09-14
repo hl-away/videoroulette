@@ -8,7 +8,6 @@ import android.widget.LinearLayout;
 
 public class VRActivity extends Activity {
     private Camera mCamera;
-    private Camera mCamera2;
     private CameraPreview mUserCameraPreview;
     private CameraPreview mPartnerCameraPreview;
     private int width;
@@ -22,7 +21,7 @@ public class VRActivity extends Activity {
         width = getWindowManager().getDefaultDisplay().getWidth();
         height = getWindowManager().getDefaultDisplay().getHeight();
         onResume();
-            LinearLayout layout = (LinearLayout) findViewById(R.id.GeneralLayout);
+        LinearLayout layout = (LinearLayout) findViewById(R.id.GeneralLayout);
         if(mPartnerCameraPreview != null) {
             layout.addView(mPartnerCameraPreview);
         }
@@ -37,9 +36,9 @@ public class VRActivity extends Activity {
         super.onResume();
         if(mCamera == null) {
             mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
-            if(mPartnerCameraPreview == null) {
-                mPartnerCameraPreview = new CameraPreview(this, mCamera);
-                mPartnerCameraPreview.getHolder().setFixedSize(width/2, height);
+            if(mUserCameraPreview == null) {
+                mUserCameraPreview = new CameraPreview(this, mCamera);
+                mUserCameraPreview.getHolder().setFixedSize(width/2, height);
             }
         }
         /*if(mCamera2 == null) {
@@ -49,19 +48,5 @@ public class VRActivity extends Activity {
                 mUserCameraPreview.getHolder().setFixedSize(width/2, height);
             }
         }*/
-    }
-
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
-
-        if (mCamera != null)
-        {
-            mCamera.setPreviewCallback(null);
-            mCamera.stopPreview();
-            mCamera.release();
-            mCamera = null;
-        }
     }
 }

@@ -2,10 +2,9 @@ package com.vr;
 
 import android.content.Context;
 import android.hardware.Camera;
-import android.view.MotionEvent;
+import android.os.AsyncTask;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 
 import java.io.IOException;
 
@@ -14,7 +13,7 @@ import java.io.IOException;
  * Date: 11.09.13
  * Time: 0:30
  */
-public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
+public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback, Camera.PreviewCallback {
 
     private SurfaceHolder mSurfaceHolder;
     private Camera mCamera;
@@ -53,6 +52,20 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             mCamera.startPreview();
         } catch (Exception e) {
             // intentionally left blank for a test
+        }
+    }
+
+    @Override
+    public void onPreviewFrame(byte[] paramArrayOfByte, Camera paramCamera)
+    {
+        new SendToServer().execute(paramArrayOfByte);
+    }
+
+    class SendToServer extends AsyncTask<byte[], String, String> {
+        @Override
+        protected String doInBackground(byte[]... arrayOfByte) {
+
+            return(null);
         }
     }
 }
