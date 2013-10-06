@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import android.hardware.Camera;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.LinearLayout;
 
 public class VRActivity extends Activity {
@@ -12,6 +14,28 @@ public class VRActivity extends Activity {
     private CameraPreview mPartnerCameraPreview;
     private int width;
     private int height;
+    private int currentCameraID = 0;
+
+    private void initCamera() {
+        if(mCamera == null || currentCameraID == Camera.CameraInfo.CAMERA_FACING_BACK) {
+            if(mCamera != null) {
+                //mCamera.stopPreview();
+                mCamera.release();
+            }
+            mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
+            currentCameraID = Camera.CameraInfo.CAMERA_FACING_FRONT;
+        } else {
+            //mCamera.stopPreview();
+            mCamera.release();
+            mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
+            currentCameraID = Camera.CameraInfo.CAMERA_FACING_FRONT;
+        }
+        mUserCameraPreview = new CameraPreview(this, mCamera);
+        Camera.Size size = mCamera.getParameters().getPictureSize();
+        int cameraWidth = size.width;
+        int cameraHeight = size.height;
+        mUserCameraPreview.getHolder().setFixedSize(cameraWidth, cameraHeight);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -35,18 +59,13 @@ public class VRActivity extends Activity {
     {
         super.onResume();
         if(mCamera == null) {
-            mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
-            if(mUserCameraPreview == null) {
-                mUserCameraPreview = new CameraPreview(this, mCamera);
-                mUserCameraPreview.getHolder().setFixedSize(width/2, height);
-            }
+            initCamera();
         }
-        /*if(mCamera2 == null) {
-            mCamera2 = Camera.open();
-            if(mUserCameraPreview == null) {
-                mUserCameraPreview = new CameraPreview(this, mCamera2);
-                mUserCameraPreview.getHolder().setFixedSize(width/2, height);
-            }
-        }*/
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        initCamera();
+        return false;
     }
 }

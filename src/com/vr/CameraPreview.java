@@ -17,7 +17,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
     private SurfaceHolder mSurfaceHolder;
     private Camera mCamera;
-    private boolean needChangeCamera = false;
 
     public CameraPreview(Context context, Camera camera) {
         super(context);
